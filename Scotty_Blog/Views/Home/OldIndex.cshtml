@@ -1,0 +1,62 @@
+﻿@using Scotty_Blog.Models
+@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<BlogPost>
+
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('/Images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>Clean Blog</h1>
+                    <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            @foreach (var blogPost in Model)
+            {
+                <div class="post-preview">
+                    <a href=@Url.Action("Details", "BlogPosts", new { slug = blogPost.Slug})>
+                        <h2 class="post-title">
+                            @blogPost.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @blogPost.Abstract
+                        </h3>
+                    </a>
+                    <p class="post-meta">
+                        Posted by                    
+                        @Html.ActionLink("Jason Twichell", "About", "Home")
+                        on @blogPost.Created.ToString("MMM dd, yyyy")
+                    </p>
+                </div>
+                <hr>
+            }
+
+            <!-- Pager -->
+            <div class="clearfix">
+                <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center h3">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount 
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+

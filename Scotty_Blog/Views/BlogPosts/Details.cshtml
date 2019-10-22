@@ -1,0 +1,92 @@
+﻿@using Scotty_Blog.Models
+@model BlogPost
+
+@{
+    ViewBag.Title = "Details";
+}
+
+    <header id="masthead" class="masthead" style="background-image: url('/Images/post-sample-image.jpg')" alt="N/A">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="post-heading">
+                        <h1>@Model.Title</h1>
+                        <h2 class="subheading">@Model.Abstract</h2>
+                        <span class="meta">
+                            Posted by
+                            @Html.ActionLink("Jason Twichell", "About", "Home")
+                            on @Model.Created.ToString("MMM dd, yyyy")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+        <!-- Post Content -->
+        <article>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        @Html.Raw(Model.BlogPostBody)
+                    </div>
+                </div>
+            </div>
+        </article>
+
+
+        <hr style="border:2px solid black;" />
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div id="addComment">
+                @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("BlogPostId", Model.Id)
+
+                    <div class="row">
+                        <div class="offset-3 col-md-6">
+                            @Html.TextArea("CommentBody", new { rows = 5, cols = 50, placeholder = "Add Comment" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset-3 col-md-6">
+                            <button type="submit" class="btn btn-sm btn-dark">Add</button>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        }
+
+        <hr style="border:2px solid black;" />
+        <div id="commentTop"></div>
+
+        @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+        {
+            <div class="container mt-3">
+                <h2>Author: @comment.Author.Email</h2>
+
+                <div class="media">
+                    <img src="~/Images/anonymous_user.jfif" class="align-self-start mr-3" style="width:60px">
+                    <div class="media-body">
+                        <h4>Written: @comment.Created.ToString("MMM dd, yyyy")</h4>
+                        @comment.CommentBody
+                    </div>
+                </div>
+            </div>
+        }
+
+
+@section scripts {  
+    <script>
+        $(function () {    
+            var image = '@Model.ImagePath';
+            if ( image != '') {
+                $("#masthead").css("background-image", "url('" + image + "')");
+            }
+        });             
+    </script>    
+}

@@ -1,0 +1,102 @@
+﻿@using Scotty_Blog.Models
+@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<BlogPost>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('/Images/personWriting.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>Blog Post Index</h1>
+                    <span class="subheading">List of all BlogPosts only to be seen by the Admin</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+@*Only show this link if I am an Admin*@
+@*@if (User.IsInRole("Admin"))
+{*@
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+@*}*@
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Created")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Updated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Slug)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Abstract)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BlogPostBody)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImagePath)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Published)
+        </th>
+        <th></th>
+    </tr>
+
+    @*Cycle through every BlogPost record in the set of BlogPost records displaying the
+        property values for each, one at a time*@
+    @foreach (var blogPost in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Updated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Slug)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Abstract)
+            </td>
+            <td>
+                @Html.Raw(blogPost.BlogPostBody)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => blogPost.Published)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { slug = blogPost.Slug }) |
+                @Html.ActionLink("Details", "Details", new { slug = blogPost.Slug }) |
+                @Html.ActionLink("Delete", "Delete", new { id = blogPost.Id })
+            </td>
+        </tr>
+    }
+
+</table>
